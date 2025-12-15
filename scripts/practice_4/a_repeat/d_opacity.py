@@ -2,18 +2,15 @@ import os
 
 from PySide6 import QtWidgets, QtCore, QtGui
 
-from conf import ROOT_FOLDER
+ROOT_FOLDER = os.getcwd()
 
 
 class Window(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-
-        self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)  # Удаление titleBar
-        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)  # Установка прозрачного фона
-
-        # добавление эффекта тени
+        self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
         self.shadow = QtWidgets.QGraphicsDropShadowEffect(self)
         self.shadow.setBlurRadius(10)
         self.shadow.setXOffset(10)
@@ -23,16 +20,15 @@ class Window(QtWidgets.QWidget):
 
         #
         label = QtWidgets.QLabel()
+        label.setObjectName("image_label")
         label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        label.setPixmap(QtGui.QPixmap(os.path.join(ROOT_FOLDER, 'static', 'ico', "64.png")))
+        icon_path = os.path.join(ROOT_FOLDER, 'static', 'ico', "64.png")
+        if os.path.exists(icon_path):
+            label.setPixmap(QtGui.QPixmap(icon_path))
+        else:
+            label.setText("Изображение не найдено")
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(label)
-        layout.addWidget(QtWidgets.QPushButton("123156"))
-
-        self.setLayout(layout)
-
-        # self.setStyleSheet('border: 5px solid black; background-image: "64.png"')
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication()

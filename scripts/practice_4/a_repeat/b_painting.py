@@ -1,4 +1,4 @@
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets , QtCore
 
 COLORS = [
     '#000000', '#141923', '#414168', '#3a7fa7', '#35e3e3', '#8fd970', '#5ebb49',
@@ -75,38 +75,34 @@ class Window(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-
         self.initUi()
 
     def initUi(self) -> None:
-        """
-        Инициализация Ui
-
-        :return: None
-        """
-
         self.canvas = Canvas()
-
-        palette = QtWidgets.QHBoxLayout()
-        self.add_palette_buttons(palette)
+        self.palette_layout = QtWidgets.QHBoxLayout()  # Сохраняем ссылку на layout
+        self.add_palette_buttons(self.palette_layout)
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.canvas)
-        layout.addLayout(palette)
-
+        layout.addLayout(self.palette_layout)
         self.setLayout(layout)
 
     def add_palette_buttons(self, layout):
         for c in COLORS:
             b = QPaletteButton(c)
-            b.pressed.connect(lambda c=c: self.canvas.set_pen_color(c))
+            b.pressed.connect(lambda c: self.canvas.set_pen_color(c))
             b.clicked.connect(self.chooseButton)
             layout.addWidget(b)
+            # В этом примере мы НЕ сохраняем кнопку в self
 
     def chooseButton(self):
-        l = self.layout().itemAt(1).layout()
-        for i in range(l.count()):
-            widget = l.itemAt(i).widget()
+
+        layout = self.palette_layout
+
+
+        for i in range(layout.count()):
+            widget = layout.itemAt(i).widget()
+
             if widget is self.sender():
                 widget.setActivate()
                 continue
